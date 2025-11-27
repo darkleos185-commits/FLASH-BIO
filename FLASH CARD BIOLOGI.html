@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flashcard Biologi - 40 Soal</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  .container {
+    background: white;
+    max-width: 600px;
+    width: 90vw;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 30px 40px;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 30px;
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2em;
+  }
+  #card {
+    background: #3498db;
+    color: white;
+    border-radius: 12px;
+    padding: 30px 25px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 1.3em;
+    user-select: none;
+    margin-bottom: 20px;
+    transition: background 0.3s ease;
+  }
+  #answer {
+    background: #2980b9;
+    margin-top: 20px;
+    border-radius: 12px;
+    padding: 18px;
+    font-size: 1.1em;
+    line-height: 1.4;
+    display: none;
+    user-select: text;
+  }
+  button {
+    background: #27ae60;
+    border: none;
+    padding: 14px 28px;
+    color: white;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: background-color 0.25s ease;
+  }
+  button:hover {
+    background: #219150;
+  }
+  #showBtn {
+    background: #e67e22;
+    margin-bottom: 10px;
+  }
+  #showBtn:hover {
+    background: #d96e1b;
+  }
+  .btn-group {
+    display: flex;
+    justify-content: center;
+  }
+  #progress {
+    margin-top: 15px;
+    color: #666;
+    font-weight: 600;
+  }
+  @media (max-width: 480px) {
+    #card {
+      font-size: 1.1em;
+      padding: 20px;
+      min-height: 120px;
+    }
+    #answer {
+      font-size: 1em;
+      padding: 14px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 0.9em;
+      margin: 5px 8px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Flashcard Biologi - 40 Soal</h1>
+  <div id="card">Loading...</div>
+  <div id="answer"></div>
+  <div class="btn-group">
+    <button id="showBtn" onclick="toggleAnswer()">Lihat Jawaban</button>
+    <button id="prevBtn" onclick="prevCard()">Soal Sebelumnya</button>
+    <button id="nextBtn" onclick="nextCard()">Soal Berikutnya</button>
+  </div>
+  <div id="progress"></div>
+</div>
+
+<script>
+const cards = [
+  { q: "Sebutkan tiga pulau utama tempat fauna Asiatis tersebar di Indonesia.", a: "Sumatra, Jawa, dan Kalimantan." },
+  { q: "Berikan tiga contoh hewan berukuran besar pada fauna Asiatis.", a: "Gajah, banteng, dan harimau." },
+  { q: "Apa yang dimaksud fauna peralihan dan berikan dua contohnya.", a: "Fauna peralihan adalah fauna di wilayah Indonesia tengah sebagai batas antara Asiatis dan Australis. Contohnya komodo dan anoa." },
+  { q: "Pada wilayah mana fauna peralihan berada di Indonesia?", a: "Wilayah Indonesia tengah seperti Sulawesi dan Nusa Tenggara." },
+  { q: "Apa ciri khas dari fauna Australis dan contoh hewannya?", a: "Mamalia kecil dan burung dengan warna cerah, serta hewan berkantung, contohnya kanguru." },
+  { q: "Jelaskan keanekaragaman hayati tingkat gen.", a: "Variasi genetik dalam satu spesies yang menyebabkan perbedaan fisik atau perilaku antar individu." },
+  { q: "Mengapa keanekaragaman tingkat gen penting bagi kelangsungan hidup spesies?", a: "Karena memungkinkan adaptasi terhadap perubahan lingkungan." },
+  { q: "Sebutkan contoh variasi genetik pada manusia dan tumbuhan.", a: "Warna rambut manusia dan bentuk biji tanaman." },
+  { q: "Apa faktor penyebab utama terjadinya keanekaragaman genetik?", a: "Perbedaan urutan gen meskipun struktur dasar kromosom sama." },
+  { q: "Sebutkan ciri-ciri umum organisme yang hidup di ekosistem akuatik.", a: "Hidup di air, terdiri dari komponen biotik dan abiotik, baik di air tawar maupun air laut." },
+  { q: "Apa ciri khas ekosistem air tawar dibandingkan air laut?", a: "Kadar garam rendah, suhu stabil, penetrasi cahaya terbatas." },
+  { q: "Berikan contoh organisme yang hidup di ekosistem air tawar dan laut.", a: "Alga, ikan, teratai, plankton, amfibi, mikroorganisme." },
+  { q: "Apa fungsi kunci determinasi?", a: "Membantu mengidentifikasi jenis organisme berdasarkan ciri-ciri." },
+  { q: "Pada tingkatan takson apa biasanya persamaan antar spesies ditemukan?", a: "Genus, ordo, atau kelas." },
+  { q: "Kelas dan ordo apa yang sama dimiliki singa, harimau, dan anjing?", a: "Kelas Mamalia, Ordo Carnivora." },
+  { q: "Bagaimana tata penulisan nama ilmiah yang benar?", a: "Genus huruf kapital, spesies huruf kecil, keduanya dicetak miring atau garis bawah." },
+  { q: "Bagaimana cara menulis nama penemu spesies dalam nama ilmiah?", a: "Ditulis setelah nama spesies, tidak miring, diawali huruf kapital." },
+  { q: "Mengapa Taman Nasional penting dalam pelestarian makhluk hidup?", a: "Karena habitat dan spesies terlindungi dan dikelola dengan baik." },
+  { q: "Sebutkan tiga tanaman untuk bahan sandang beserta nama ilmiahnya.", a: "Kapas/Gossypium hirsutum, Rami/Boehmeria nivea, Yute/Corchorus capsularis." },
+  { q: "Apa tindakan pelestarian terumbu karang?", a: "Tidak merusak karang dan menghindari pencemaran laut." },
+  { q: "Sebutkan empat virus DNA dan penyakit terkait.", a: "Hepatitis B, Herpes simpleks, Adenovirus, Papillomavirus." },
+  { q: "Sebutkan empat virus RNA dan penyakit terkait.", a: "Influenza, HIV, Rabies, Polio, dan SARS-CoV-2." },
+  { q: "Virus HIV termasuk jenis apa dan menyerang sel apa?", a: "Virus RNA yang menyerang sel limfosit CD4+." },
+  { q: "Kapan biasanya antibodi HIV dapat terdeteksi?", a: "Minggu ke-3 sampai ke-12 setelah infeksi." },
+  { q: "Sebutkan lima tahapan utama siklus litik virus.", a: "Adsorpsi, penetrasi, sintesis, perakitan, dan lisis/pembebasan." },
+  { q: "Apa perbedaan siklus litik dan lisogenik?", a: "Litik menyebabkan sel pecah, lisogenik menyisipkan DNA virus ke genom sel inang." },
+  { q: "Sebutkan satu persamaan siklus litik dan lisogenik.", a: "Virus menempel dan memasukkan materi genetik ke sel inang." },
+  { q: "Fungsi protein Spike (S) pada virus corona?", a: "Menempelkan virus ke reseptor ACE2 sel inang." },
+  { q: "Fungsi viral envelope dan protein M dalam virus corona?", a: "Melindungi genom virus dan membantu perakitan partikel virus." },
+  { q: "Fungsi protein E dan N pada virus corona?", a: "Protein E untuk perakitan dan pelepasan, protein N membungkus RNA virus." },
+  { q: "Bagaimana virus menyebar antar manusia?", a: "Melalui droplet, darah, cairan, gigitan vektor, dan kontak langsung." },
+  { q: "Kapan ruam muncul pada penyakit campak?", a: "Hari ke-3 sampai ke-7 setelah gejala awal." },
+  { q: "Siapa penemu virus dan apa yang ditemukan?", a: "Dmitri Ivanovsky dan Martinus Beijerinck menemukan agen infeksi sangat kecil bukan bakteri." },
+  { q: "Organ apa yang diserang poliovirus dan akibatnya?", a: "Neuron motorik sumsum tulang belakang, menyebabkan kelumpuhan." },
+  { q: "Apa perbedaan gondok dan gondongan?", a: "Gondok bukan penyakit virus, gondongan disebabkan virus mumps." },
+  { q: "Apa arti virus sebagai parasit intraseluler obligat?", a: "Virus hanya hidup dan bereplikasi di dalam sel makhluk hidup." },
+  { q: "Cocokkan virus berikut dengan penyakitnya: Variola, Rabies lyssavirus, FMD.", a: "Variola (cacar), Rabies lyssavirus (rabies), Foot-and-mouth disease virus (penyakit mulut dan kuku)." },
+  { q: "Jelaskan prinsip kultur jaringan.", a: "Totipotensi sel, kondisi aseptik, media nutrisi dan hormon pertumbuhan." },
+  { q: "Mengapa kultur jaringan termasuk bioteknologi modern?", a: "Memanfaatkan teknik laboratorium untuk memperbanyak tanaman identik dengan cepat." },
+  { q: "Fungsi enzim ligase dan restriksi dalam rekayasa genetika?", a: "Ligase menyambung DNA, restriksi memotong DNA pada urutan spesifik." }
+];
+
+let currentIndex = 0;
+
+function showCard(index) {
+  const card = cards[index];
+  document.getElementById("card").textContent = card.q;
+  const ans = document.getElementById("answer");
+  ans.textContent = card.a;
+  ans.style.display = "none";
+  document.getElementById("showBtn").textContent = "Lihat Jawaban";
+  updateProgress();
+}
+
+function toggleAnswer() {
+  const ans = document.getElementById("answer");
+  const btn = document.getElementById("showBtn");
+  if (ans.style.display === "none") {
+    ans.style.display = "block";
+    btn.textContent = "Sembunyikan Jawaban";
+  } else {
+    ans.style.display = "none";
+    btn.textContent = "Lihat Jawaban";
+  }
+}
+
+function nextCard() {
+  currentIndex = (currentIndex + 1) % cards.length;
+  showCard(currentIndex);
+}
+
+function prevCard() {
+  currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+  showCard(currentIndex);
+}
+
+function updateProgress() {
+  document.getElementById("progress").textContent = `Soal ${currentIndex + 1} dari ${cards.length}`;
+}
+
+window.onload = () => { showCard(currentIndex); };
+</script>
+
+</body>
+</html>
